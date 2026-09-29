@@ -1,10 +1,12 @@
-import { ArrowRight, Code2, Sparkles, BookOpen, Terminal, CheckCircle2 } from 'lucide-react';
+import { useState } from 'react';
+import { ArrowRight, Sparkles, Terminal, CheckCircle2 } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
-
-// Reference generated avatar
-const avatarUrl = '/src/assets/images/niharika_avatar_1790679178535.jpg';
+import avatarUrl from '../assets/images/niharika_avatar_1790679178535.jpg';
 
 export default function Hero() {
+  const [imgLoaded, setImgLoaded] = useState(false);
+  const [imgError, setImgError] = useState(false);
+
   return (
     <section id="home" className="relative pt-12 pb-20 md:pt-20 md:pb-28 overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -79,19 +81,27 @@ export default function Hero() {
               {/* Profile Bar */}
               <div className="flex items-center gap-4 pb-5 border-b border-slate-100">
                 <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 shrink-0">
-                  <img
-                    src={avatarUrl}
-                    alt={PERSONAL_INFO.name}
-                    className="w-full h-full object-cover"
-                    referrerPolicy="no-referrer"
-                    onError={(e) => {
-                      // Fallback if image fails
-                      (e.currentTarget as HTMLElement).style.display = 'none';
-                    }}
-                  />
-                  <div className="w-full h-full flex items-center justify-center bg-blue-50 text-blue-600 font-bold text-lg">
-                    NR
-                  </div>
+                  {!imgLoaded && !imgError && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-blue-50 text-blue-600 font-bold text-lg">
+                      NR
+                    </div>
+                  )}
+                  {!imgError ? (
+                    <img
+                      src={avatarUrl}
+                      alt={PERSONAL_INFO.name}
+                      className={`w-full h-full object-cover transition-opacity duration-300 ${
+                        imgLoaded ? 'opacity-100' : 'opacity-0'
+                      }`}
+                      referrerPolicy="no-referrer"
+                      onLoad={() => setImgLoaded(true)}
+                      onError={() => setImgError(true)}
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-blue-50 text-blue-600 font-bold text-lg">
+                      NR
+                    </div>
+                  )}
                 </div>
 
                 <div className="min-w-0">

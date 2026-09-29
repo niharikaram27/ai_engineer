@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X, Play, Code, Check, Copy, ExternalLink, RotateCcw } from 'lucide-react';
 import { Project } from '../data/portfolioData';
 
@@ -12,6 +12,22 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
 
   const [activeTab, setActiveTab] = useState<'demo' | 'code'>('demo');
   const [copied, setCopied] = useState(false);
+
+  // Keyboard navigation & body scroll lock
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [onClose]);
 
   // Voter Demo States
   const [voterName, setVoterName] = useState('');
@@ -138,7 +154,14 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-200">
+    <div
+      className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-200"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
+      }}
+    >
       <div
         className="bg-white w-full max-w-3xl rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]"
         role="dialog"
@@ -208,10 +231,11 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                   <form onSubmit={handleCheckVoter} className="space-y-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-xs font-medium text-slate-700 mb-1">
+                        <label htmlFor="applicant-name" className="block text-xs font-medium text-slate-700 mb-1">
                           Applicant Name
                         </label>
                         <input
+                          id="applicant-name"
                           type="text"
                           value={voterName}
                           onChange={(e) => setVoterName(e.target.value)}
@@ -220,10 +244,11 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-medium text-slate-700 mb-1">
+                        <label htmlFor="applicant-age" className="block text-xs font-medium text-slate-700 mb-1">
                           Age (Years) *
                         </label>
                         <input
+                          id="applicant-age"
                           type="number"
                           value={voterAge}
                           onChange={(e) => setVoterAge(e.target.value === '' ? '' : Number(e.target.value))}
@@ -265,10 +290,11 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                   {!atmAuth ? (
                     <form onSubmit={handleAtmLogin} className="space-y-3">
                       <div>
-                        <label className="block text-xs font-medium text-slate-700 mb-1">
+                        <label htmlFor="atm-pin-input" className="block text-xs font-medium text-slate-700 mb-1">
                           Enter 4-Digit Security PIN (Demo PIN: 1234)
                         </label>
                         <input
+                          id="atm-pin-input"
                           type="password"
                           maxLength={4}
                           value={atmPin}
@@ -309,8 +335,13 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                       {/* Operations */}
                       <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
                         <div className="sm:col-span-6">
+                          <label htmlFor="atm-amount-input" className="sr-only">
+                            Amount in dollars
+                          </label>
                           <input
+                            id="atm-amount-input"
                             type="number"
+                            aria-label="Amount in dollars"
                             value={atmAmount}
                             onChange={(e) => setAtmAmount(e.target.value === '' ? '' : Number(e.target.value))}
                             placeholder="Amount ($)"

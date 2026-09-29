@@ -126,10 +126,11 @@ export default function Contact() {
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-medium text-slate-700 mb-1">
+                    <label htmlFor="contact-name" className="block text-xs font-medium text-slate-700 mb-1">
                       Your Name *
                     </label>
                     <input
+                      id="contact-name"
                       type="text"
                       required
                       value={formData.name}
@@ -139,10 +140,11 @@ export default function Contact() {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-slate-700 mb-1">
+                    <label htmlFor="contact-sender" className="block text-xs font-medium text-slate-700 mb-1">
                       Your LinkedIn / Email *
                     </label>
                     <input
+                      id="contact-sender"
                       type="text"
                       required
                       value={formData.senderContact}
@@ -154,10 +156,11 @@ export default function Contact() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">
+                  <label htmlFor="contact-subject" className="block text-xs font-medium text-slate-700 mb-1">
                     Subject
                   </label>
                   <input
+                    id="contact-subject"
                     type="text"
                     value={formData.subject}
                     onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
@@ -167,10 +170,11 @@ export default function Contact() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">
+                  <label htmlFor="contact-message" className="block text-xs font-medium text-slate-700 mb-1">
                     Message *
                   </label>
                   <textarea
+                    id="contact-message"
                     rows={4}
                     required
                     value={formData.message}
